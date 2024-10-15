@@ -1,5 +1,5 @@
-torchrun --nproc_per_node=4 \
-    --master_port=34650 \
+torchrun --nproc_per_node=auto \
+    --master_port=34651 \
     train.py \
     --cfg-path lavis/projects/malmm/cls_breakfast.yaml \
     --options \
@@ -18,7 +18,7 @@ torchrun --nproc_per_node=4 \
     run.batch_size_train 16 \
     run.batch_size_eval 16 \
     run.accum_grad_iters 1 \
-    run.num_workers 12 \
+    run.num_workers 0 \
     run.seed 42 \
     run.evaluate False \
     run.report_metric True \

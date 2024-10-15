@@ -24,6 +24,7 @@ from lavis.datasets.builders.classification_builder import (
     LVUCLSBuilder,
     COINCLSBuilder,
     BreakfastCLSBuilder,
+    ScoringCLSBuilder,
 )
 from lavis.datasets.builders.imagefolder_builder import ImageNetBuilder
 from lavis.datasets.builders.video_qa_builder import (
@@ -75,6 +76,7 @@ __all__ = [
     "LVUCLSBuilder",
     "COINCLSBuilder",
     "BreakfastCLSBuilder",
+    "ScoringCLSBuilder",
 ]
 
 

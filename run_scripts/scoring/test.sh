@@ -2,7 +2,7 @@ checkpoint_path=$1
 torchrun --nproc_per_node=auto \
     --master_port=34632 \
     train.py \
-    --cfg-path lavis/projects/malmm/cls_breakfast.yaml \
+    --cfg-path lavis/projects/malmm/cls_scoring.yaml \
     --options \
     model.arch blip2_vicuna_instruct \
     model.model_type vicuna7b \

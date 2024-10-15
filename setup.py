@@ -34,3 +34,4 @@ setup(
     dependency_links=DEPENDENCY_LINKS,
     zip_safe=False,
 )
+# conda env remove --name malmm

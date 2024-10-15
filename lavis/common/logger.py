@@ -111,7 +111,7 @@ class MetricLogger(object):
     def global_avg(self):
         loss_str = []
         for name, meter in self.meters.items():
-            loss_str.append("{}: {:.4f}".format(name, meter.global_avg))
+            loss_str.append("{}: {:.10f}".format(name, meter.global_avg))
         return self.delimiter.join(loss_str)
 
     def synchronize_between_processes(self):
@@ -144,8 +144,8 @@ class MetricLogger(object):
         MB = 1024.0 * 1024.0
         for obj in iterable:
             data_time.update(time.time() - end)
-            yield obj
-            iter_time.update(time.time() - end)
+            yield obj 
+            iter_time.update(time.time() - end) # data time plus the time to run the model on the batch of data
             if i % print_freq == 0 or i == len(iterable) - 1:
                 eta_seconds = iter_time.global_avg * (len(iterable) - i)
                 eta_string = str(datetime.timedelta(seconds=int(eta_seconds)))

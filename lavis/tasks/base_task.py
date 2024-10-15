@@ -55,7 +55,6 @@ class BaseTask:
 
             builder = registry.get_builder_class(name)(dataset_config)
             dataset = builder.build_datasets()
-
             datasets[name] = dataset
 
         return datasets
@@ -209,7 +208,6 @@ class BaseTask:
             # if i >= 50:
             #     break
             samples = next(data_loader)
-
             samples = prepare_sample(samples, cuda_enabled=cuda_enabled)
             samples.update(
                 {
@@ -220,6 +218,9 @@ class BaseTask:
             )
 
             lr_scheduler.step(cur_epoch=inner_epoch, cur_step=i)
+            # log lr for current step logging.info(f"{optimizer.param_groups[0]["lr"]}")
+            if i % 10 == 0:
+                logging.info(f"learning rate for step {i} of inner epoch {inner_epoch}: {optimizer.param_groups[0]['lr']}")
 
             with torch.cuda.amp.autocast(enabled=use_amp):
                 loss, loss_dict = self.train_step(model=model, samples=samples)

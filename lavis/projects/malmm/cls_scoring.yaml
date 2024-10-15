@@ -27,7 +27,7 @@ model:
   max_txt_len: 30
 
 datasets:
-  breakfast_cls: # name of the dataset builder
+  scoring_cls: # name of the dataset builder
     vis_processor:
         train:
           name: "blip2_video_train"

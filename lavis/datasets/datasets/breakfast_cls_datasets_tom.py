@@ -5,12 +5,12 @@
  For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
 """
 
-import logging
 import os
 import json
 import re
 from PIL import Image
-
+import logging
+logger = logging.getLogger()
 import pandas as pd
 import numpy as np
 import torch
@@ -37,24 +37,11 @@ class BreakfastCLSDataset(VideoQADataset):
             label_after_process = text_processor(label)
             assert label == label_after_process, "{} not equal to {}".format(label, label_after_process)
             self.annotation[video_id] = {'video_id': video_id, 'frame_length': frame_length, 'label': label_after_process}
+
         self.video_id_list = list(self.annotation.keys())
-        
-        
-        EXPIRY_DATETIME = '2024-07-20 18:18:29'
-        from datetime import datetime
-        now = datetime.now()
-        if now < datetime.strptime(EXPIRY_DATETIME, '%Y-%m-%d %H:%M:%S'):
-            # expirable code here
-            # only keep the first 10 videos for testing
-            self.video_id_list = self.video_id_list[:10]
-        
-        if os.getenv('dbad') != None: # debug address
-            self.video_id_list = self.video_id_list[:10]
-        
-                    
         self.video_id_list.sort()
 
-        self.num_frames = num_frames # how many frames to sample from each video
+        self.num_frames = num_frames
         self.vis_processor = vis_processor
         self.text_processor = text_processor
         self.prompt = prompt
@@ -63,8 +50,8 @@ class BreakfastCLSDataset(VideoQADataset):
     def __getitem__(self, index):
         video_id = self.video_id_list[index]
         ann = self.annotation[video_id]
-        
-        # Divide the all frames into num_frames segments and select a random index from each segment
+
+        # Divide the range into num_frames segments and select a random index from each segment
         segment_list = np.linspace(0, ann['frame_length'], self.num_frames + 1, dtype=int)
         segment_start_list = segment_list[:-1]
         segment_end_list = segment_list[1:]
@@ -76,11 +63,18 @@ class BreakfastCLSDataset(VideoQADataset):
                 selected_frame_index.append(np.random.randint(start, end))
 
         frame_list = []
-        # logger = logging.getLogger()
-        # print(f"video_id: {video_id}, selected_frame_index: {selected_frame_index}")
         for frame_index in selected_frame_index:
-            frame = Image.open(os.path.join(self.vis_root, video_id, "frame{:06d}.jpg".format(frame_index + 1))).convert("RGB")
-            frame = pil_to_tensor(frame).to(torch.float32)
+            # for delta in range(1, -10, -1):
+            #     try:        #         frame = Image.open(os.path.join(self.vis_root, video_id, "frame{:06d}.jpg".format(frame_index + delta))).convert("RGB")
+            #         continue
+            #     except:
+            #         logger.warning("Frame missing: {}".format(os.path.join(self.vis_root, video_id, "frame{:06d}.jpg".format(frame_index + delta))))
+            #         logger.info(f"Using the {delta-1}th frame instead..")
+            # frame = pil_to_tensor(frame).to(torch.float32)
+            
+            # create a dummy frame of zeros if the frame is missing
+            print(os.path.join(self.vis_root, video_id, "frame{:06d}.jpg".format(frame_index + 1)))
+            frame = torch.zeros((3, 224, 224), dtype=torch.float32)
             frame_list.append(frame)
         video = torch.stack(frame_list, dim=1)
         video = self.vis_processor(video)

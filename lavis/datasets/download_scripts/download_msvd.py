@@ -46,7 +46,7 @@ if __name__ == "__main__":
 
     storage_dir = OmegaConf.load(
         config_path
-    ).datasets.msvd_cap.build_info.videos.storage
+    ).datasets.msvd_caption.build_info.videos.storage
 
     download_dir = Path(get_cache_path(storage_dir)).parent / "download"
     storage_dir = Path(get_cache_path(storage_dir))

@@ -461,7 +461,10 @@ class Blip2VicunaInstruct_MALMM(Blip2Base):
             inputs_embeds = self.llm_model.get_input_embeddings()(llm_tokens.input_ids)
             inputs_embeds = torch.cat([inputs_llm, inputs_embeds], dim=1)
             attention_mask = torch.cat([atts_llm, llm_tokens.attention_mask], dim=1)
-
+            # modify llm_model config here to add max new tokens
+            # july 30 tom quick fix
+            self.llm_model.generation_config.max_new_tokens = 20            
+            self.llm_model.generation_config.min_new_tokens = 1
             outputs = self.llm_model.generate(
                 inputs_embeds=inputs_embeds,
                 attention_mask=attention_mask,

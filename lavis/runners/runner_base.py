@@ -8,11 +8,13 @@
 import datetime
 import json
 import logging
+import multiprocessing
 import os
 import time
 from omegaconf import OmegaConf
 from pathlib import Path
 
+import ptvsd
 import torch
 import torch.distributed as dist
 import webdataset as wds
@@ -365,6 +367,12 @@ class RunnerBase:
             fp.write(OmegaConf.to_yaml(self.config.config))
 
     def train(self):
+        import os
+        if os.getenv('dbad') != None and is_main_process(): # debug address
+            ptvsd.enable_attach(address=('localhost', int(os.getenv('dbad'))), redirect_output=True)
+            print('waiting for debugger attachment')
+            ptvsd.wait_for_attach()
+        dist.barrier()
         start_time = time.time()
         best_agg_metric = [0 for i in range(len(self.valid_splits))]
         best_epoch = 0
@@ -381,11 +389,15 @@ class RunnerBase:
             if not self.evaluate_only:
                 logging.info("Start training")
                 train_stats = self.train_epoch(cur_epoch)
-                self.log_stats(split_name="train", stats=train_stats)
-                self._save_checkpoint(cur_epoch, is_best=False)
+                self.log_stats(split_name="train", stats=train_stats)                
+                save_ckp_proc = self._save_checkpoint_async(cur_epoch, is_best=False)
 
             # evaluation phase
             if len(self.valid_splits) > 0:
+                
+                logging.info("Evaluating on train.")
+                self.eval_epoch(split_name='test', cur_epoch=cur_epoch) 
+                
                 for i, split_name in enumerate(self.valid_splits):
                     logging.info("Evaluating on {}.".format(split_name))
 
@@ -412,6 +424,8 @@ class RunnerBase:
                             self.log_stats(val_log, split_name)
                             best_val_log[i].update({"best_epoch": best_epoch})
                             self.log_stats(best_val_log[i], split_name)
+
+
             else:
                 # if no validation split is provided, we just save the checkpoint at the end of each epoch.
                 if not self.evaluate_only:
@@ -605,6 +619,13 @@ class RunnerBase:
         )
         logging.info("Saving checkpoint at epoch {} to {}.".format(cur_epoch, save_to))
         torch.save(save_obj, save_to)
+
+
+    @main_process
+    def _save_checkpoint_async(self, cur_epoch, is_best):
+        process = multiprocessing.Process(target=self._save_checkpoint, args=(cur_epoch, is_best))
+        process.start()
+        return process
 
     def _reload_best_model(self, model):
         """

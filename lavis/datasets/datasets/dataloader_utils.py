@@ -7,6 +7,7 @@
 
 import time
 import random
+import numpy as np
 import torch
 from lavis.datasets.data_utils import move_to_cuda
 from torch.utils.data import DataLoader
@@ -160,3 +161,16 @@ class IterLoader:
 
     def __len__(self):
         return len(self._dataloader)
+
+
+def get_frame_indices(total_num_frames, target_num_frames):
+    segment_list = np.linspace(0, total_num_frames, target_num_frames + 1, dtype=int)
+    segment_start_list = segment_list[:-1]
+    segment_end_list = segment_list[1:]
+    selected_frame_indices = []
+    for start, end in zip(segment_start_list, segment_end_list):
+        if start == end:
+            selected_frame_indices.append(start)
+        else:
+            selected_frame_indices.append(np.random.randint(start, end))
+    return selected_frame_indices

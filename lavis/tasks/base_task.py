@@ -261,6 +261,11 @@ class BaseTask:
             result_dir, "%s_rank%d.json" % (filename, get_rank())
         )
         final_result_file = os.path.join(result_dir, "%s.json" % filename)
+        
+        # check all keys in result, if any key is a tensor, convert it to a list
+        for key in result[0]:
+            if isinstance(result[0][key], torch.Tensor):
+                result = [{key: v.tolist() for key, v in d.items()} for d in result]
 
         json.dump(result, open(result_file, "w"))
 

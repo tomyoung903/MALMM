@@ -392,15 +392,12 @@ class CameraMotionCLSBuilder(BaseDatasetBuilder):
                 if is_train
                 else self.text_processors["eval"]
             )
-            if is_train:
-                prompt = self.config.get("text_processor").get('train').get('prompt')
-            else:
-                prompt = self.config.get("text_processor").get('eval').get('prompt')
+            prompt = self.config.get('prompt')
                 
             # annotation path
             csv_path = ann_info.get(split)
             if not os.path.exists(csv_path):
-                warnings.warn("storage path {} does not exist.".format(csv_path))
+                raise FileNotFoundError(f"File not found: {csv_path}")
 
             # create datasets
             dataset_cls = self.train_dataset_cls if is_train else self.eval_dataset_cls

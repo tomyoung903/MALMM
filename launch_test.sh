@@ -5,3 +5,4 @@ checkpoint_path=lavis/output/scoring_cls/blip2_vicuna_instruct_vicuna7b/train/b1
 log_path=./logs/scoring/test.log
 bash ./run_scripts/scoring/test.sh $checkpoint_path > $log_path 2>&1 &
 code $log_path
+

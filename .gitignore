@@ -165,3 +165,4 @@ dataset
 data/
 lavis/output
 *.log
+test/

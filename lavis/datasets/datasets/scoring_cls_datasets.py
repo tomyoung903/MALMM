@@ -16,6 +16,7 @@ import numpy as np
 import torch
 from torchvision.transforms.functional import pil_to_tensor
 
+from lavis.datasets.datasets.dataloader_utils import get_frame_indices
 from lavis.datasets.datasets.video_vqa_datasets import VideoQADataset
 
 PROMPT = 'Is this video desirable to users as the output of a video generation model? '
@@ -57,23 +58,13 @@ class ScoringCLSDataset(VideoQADataset):
         self.prompt = prompt
         # self._add_instance_ids()
 
-    def get_frame_indices(total_num_frames, target_num_frames):
-        segment_list = np.linspace(0, total_num_frames, target_num_frames + 1, dtype=int)
-        segment_start_list = segment_list[:-1]
-        segment_end_list = segment_list[1:]
-        selected_frame_indices = []
-        for start, end in zip(segment_start_list, segment_end_list):
-            if start == end:
-                selected_frame_indices.append(start)
-            else:
-                selected_frame_indices.append(np.random.randint(start, end))
-        return selected_frame_indices
+
 
     def __getitem__(self, index):
         video_id = self.video_id_list[index]
         ann = self.annotation[video_id]
         # Divide the range into num_frames segments and select a random index from each segment
-        selected_frame_indices = self.get_frame_indices(ann['frame_length'], self.num_frames)
+        selected_frame_indices = get_frame_indices(ann['frame_length'], self.num_frames)
 
         frame_list = []
         # logger = logging.getLogger()

@@ -263,9 +263,10 @@ class BaseTask:
         final_result_file = os.path.join(result_dir, "%s.json" % filename)
         
         # check all keys in result, if any key is a tensor, convert it to a list
-        for key in result[0]:
-            if isinstance(result[0][key], torch.Tensor):
-                result = [{key: v.tolist() for key, v in d.items()} for d in result]
+        for i in range(len(result)):
+            for key, value in result[i].items():
+                if isinstance(value, torch.Tensor):
+                    result[i][key] = value.tolist()
 
         json.dump(result, open(result_file, "w"))
 

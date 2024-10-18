@@ -389,18 +389,20 @@ class RunnerBase:
             if not self.evaluate_only:
                 logging.info("Start training")
                 train_stats = self.train_epoch(cur_epoch)
-                self.log_stats(split_name="train", stats=train_stats)                
-                save_ckp_proc = self._save_checkpoint_async(cur_epoch, is_best=False)
+                self.log_stats(split_name="train", stats=train_stats)
+                train_log = self.eval_epoch(
+                    split_name="train", cur_epoch=cur_epoch
+                )
+                
+                logging.info("Evaluating on train.")
+                self.log_stats(split_name="train", stats=train_log)
+                self._save_checkpoint(cur_epoch, is_best=False)
 
             # evaluation phase
             if len(self.valid_splits) > 0:
-                
-                logging.info("Evaluating on train.")
-                self.eval_epoch(split_name='test', cur_epoch=cur_epoch) 
-                
                 for i, split_name in enumerate(self.valid_splits):
                     logging.info("Evaluating on {}.".format(split_name))
-
+                    
                     val_log = self.eval_epoch(
                         split_name=split_name, cur_epoch=cur_epoch
                     )

@@ -114,7 +114,7 @@ class ClassificationTask(BaseTask):
 
     @main_process
     def _report_metrics_cls(self, eval_result_file, split_name, dataset):
-        gt_dict = dataset.annotation
+        gt_dict = dataset.data
 
         with open(eval_result_file, 'r') as fp:
             prediction_list = json.load(fp)

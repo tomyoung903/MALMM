@@ -91,7 +91,6 @@ class RunnerIter(RunnerBase):
                         self.max_iters, int(self.max_iters / self.iters_per_inner_epoch)
                     )
                 )
-
                 train_stats = self.train_iters(self.cur_epoch, start_iters)
                 self.log_stats(split_name="train", stats=train_stats)
 

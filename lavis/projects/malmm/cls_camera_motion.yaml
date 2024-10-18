@@ -43,7 +43,7 @@ datasets:
           name: "blip_caption"
           prompt: ""
     num_frames: 20
-    prompt: "What is the camera motion type in this video?"
+    prompt: "Please describe the camera motion type in this video. Your answer should be one of the following 6 categories: zoom in, zoom out, tilt left, tilt right, pan up, pan down."
 
 run:
   task: classification

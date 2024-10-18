@@ -30,6 +30,8 @@ from lavis.models import *
 from lavis.processors import *
 from lavis.runners import *
 from lavis.tasks import *
+import torch.multiprocessing as mp
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Training")
@@ -95,7 +97,7 @@ def main():
                         cfg.datasets_cfg[dataset_name]['num_frames'],  
                         cfg.model_cfg.memory_bank_length,
                     )
-    elif 'coin' in dataset_name or 'breakfast' in dataset_name or 'scoring' in dataset_name:
+    elif 'coin' in dataset_name or 'breakfast' in dataset_name in dataset_name:
         job_id += 'b{}_e{}_lr{}_wd{}_q{}_f{}_fb{}'.format(
                         cfg.run_cfg.batch_size_train * cfg.run_cfg.accum_grad_iters, 
                         cfg.run_cfg.max_epoch, cfg.run_cfg.init_lr, 
@@ -112,6 +114,15 @@ def main():
                         cfg.model_cfg.memory_bank_length,
                     )
 
+    else:
+        job_id += 'b{}_e{}_lr{}_wd{}_q{}_f{}_fb{}'.format(
+                cfg.run_cfg.batch_size_train * cfg.run_cfg.accum_grad_iters, 
+                cfg.run_cfg.max_epoch, cfg.run_cfg.init_lr, 
+                cfg.run_cfg.weight_decay, cfg.model_cfg.num_query_token,
+                cfg.datasets_cfg[dataset_name]['num_frames'], 
+                cfg.model_cfg.memory_bank_length,
+            )
+    
     cfg.model_cfg.arch += '_malmm'
     if cfg.model_cfg.freeze_vit:
         job_id += '_freezevit'
@@ -137,4 +148,5 @@ def main():
 
 
 if __name__ == "__main__":
+    mp.set_start_method('spawn')
     main()

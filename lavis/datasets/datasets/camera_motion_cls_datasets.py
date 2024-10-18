@@ -43,7 +43,7 @@ class CameraMotionCLSDataset(VideoQADataset):
         self.vis_processor = vis_processor
         self.text_processor = text_processor
         self.prompt = prompt
-        assert self.prompt == "What is the camera motion type in this video?", "Prompt is not correct"
+        # assert self.prompt == "What is the camera motion type in this video?", "Prompt is not correct"
 
     @staticmethod
     def process_label(label):

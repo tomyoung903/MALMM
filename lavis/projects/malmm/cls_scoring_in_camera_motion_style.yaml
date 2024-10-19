@@ -23,7 +23,7 @@ model:
   llm_model: "llm/vicuna-7b"
 
   # generation configs
-  prompt: "" # when this is set to none is will use the "prompt" field provided by the dataset class
+  prompt: ""
   max_txt_len: 30
 
 datasets:
@@ -43,7 +43,8 @@ datasets:
           name: "blip_caption"
           prompt: ""
     num_frames: 20
-    prompt: "Please describe the camera motion type in this video. Your answer should be one of the following 6 categories: zoom in, zoom out, tilt left, tilt right, pan up, pan down."
+    prompt: "Is this video desirable to users as the output of a video generation model?"
+    type: "scoring_in_camera_motion_style"
 
 run:
   task: classification

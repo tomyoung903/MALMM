@@ -6,6 +6,6 @@ datasets:
     build_info:
       # Be careful not to append minus sign (-) before split to avoid itemizing
       annotations:
-        train: /home/tom/Open-Sora-dev/tools/scoring/MA-LMM/data/camera_motion/zoom_in_10.csv
-        val: /home/tom/Open-Sora-dev/tools/scoring/MA-LMM/data/camera_motion/zoom_in_10.csv
-        test: /home/tom/Open-Sora-dev/tools/scoring/MA-LMM/data/camera_motion/zoom_in_10.csv
+        train: /home/tom/Open-Sora-dev/tools/scoring/MA-LMM/data/camera_motion/6_motion_classes_500.csv
+        val: /home/tom/Open-Sora-dev/tools/scoring/MA-LMM/data/camera_motion/6_motion_classes_100.csv
+        test: /home/tom/Open-Sora-dev/tools/scoring/MA-LMM/data/camera_motion/6_motion_classes_20.csv

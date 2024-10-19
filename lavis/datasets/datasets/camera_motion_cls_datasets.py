@@ -31,6 +31,7 @@ class CameraMotionCLSDataset(VideoQADataset):
             label = df.iloc[video_id]['pose_traj_class']
             label = self.process_label(label)
             label_after_process = text_processor(label)
+            # print(f"label: {label}, label_after_process: {label_after_process}")
             assert label == label_after_process, "{} not equal to {}".format(label, label_after_process)  # the official repo does this; not sure why
             self.data[video_id] = {
                 'video_id': video_id, 
@@ -102,3 +103,9 @@ class CameraMotionCLSEvalDataset(CameraMotionCLSDataset):
     def __init__(self, vis_processor, text_processor, csv_path, 
                  num_frames, prompt, split='val'):
         super().__init__(vis_processor, text_processor, csv_path, num_frames, prompt, split='val')
+    
+    def __getitem__(self, index):
+        # use the super class method and add "prompt"
+        output = super().__getitem__(index)
+        output["prompt"] = output["text_input"]
+        return output

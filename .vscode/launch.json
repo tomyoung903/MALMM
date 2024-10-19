@@ -50,6 +50,39 @@
                 "CUDA_VISIBLE_DEVICES": "5",
                 "CUDA_LAUNCH_BLOCKING": "0"
             },
-        }        
+        },
+        {
+            "name": "Eval MALMM",
+            "type": "debugpy",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "module": "torch.distributed.run",
+            "args": [
+                "--nproc_per_node", "auto",
+                "--master_port", "34651",
+                "train.py",
+                "--cfg-path", "lavis/projects/malmm/cls_camera_motion_test.yaml",
+                "--options",
+                "model.num_frames", "20",
+                "run.batch_size_eval", "24",
+                "run.num_workers", "1",
+                "model.arch", "blip2_vicuna_instruct",
+                "model.model_type", "vicuna7b",
+                "model.load_finetuned", "True",
+                "model.load_pretrained", "False",
+                "model.num_query_token", "32",
+                "model.memory_bank_length", "20",
+                "run.num_beams", "5",
+                "run.seed", "42",
+                "run.evaluate", "True",
+                "run.report_metric", "True",
+                "run.prefix", "2024-10-19_11h00m43s"
+            ],
+            "env": {
+                "CUDA_VISIBLE_DEVICES": "0",
+                "CUDA_LAUNCH_BLOCKING": "0"
+            },
+        }
     ]
 }

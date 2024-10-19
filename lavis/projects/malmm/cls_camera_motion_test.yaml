@@ -8,6 +8,7 @@ model:
   model_type: vicuna7b
   load_finetuned: False
   load_pretrained: True
+  finetuned: "lavis/output/camera_motion_cls/blip2_vicuna_instruct_vicuna7b/2024-10-19_11h00m43s/b12_e100_lr1e-05_wd0.05_q32_f20_fb20/checkpoint_best.pth"
 
   # vit encoder
   image_size: 224

@@ -390,12 +390,13 @@ class RunnerBase:
                 logging.info("Start training")
                 train_stats = self.train_epoch(cur_epoch)
                 self.log_stats(split_name="train", stats=train_stats)
-                train_log = self.eval_epoch(
-                    split_name="train", cur_epoch=cur_epoch
-                )
                 
-                logging.info("Evaluating on train.")
-                self.log_stats(split_name="train", stats=train_log)
+                logging.info("Extra evaluation on val.")
+                extra_val_log = self.eval_epoch(
+                    split_name="val", cur_epoch=cur_epoch
+                )
+                self.log_stats(split_name="val", stats=extra_val_log)
+                
                 self._save_checkpoint(cur_epoch, is_best=False)
 
             # evaluation phase

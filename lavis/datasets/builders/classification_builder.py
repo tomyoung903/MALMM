@@ -362,6 +362,7 @@ class CameraMotionCLSBuilder(BaseDatasetBuilder):
     eval_dataset_cls = CameraMotionCLSEvalDataset
     DATASET_CONFIG_DICT = {
         "default": "configs/datasets/camera_motion/defaults_cls.yaml",
+        "scoring_in_camera_motion_style": "configs/datasets/camera_motion/scoring_cls_in_camera_motion_style.yaml",
     }
 
     def build(self):

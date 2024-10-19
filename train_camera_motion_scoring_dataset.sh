@@ -2,20 +2,23 @@
 # always change the log file name
 
 timestamp=$(date '+%Y-%m-%d_%Hh%Mm%Ss')
-logfile=./logs/camera_motion/train_$timestamp.log
+run_id=${timestamp}_scoring_in_camera_motion_style
+logfile=./logs/camera_motion/train_${run_id}.log
 # rename the old output dir if it's a run with the same parameters unless to resume the training
 
+random_port=$((49152 + RANDOM % 16384))
+
 export CUDA_LAUNCH_BLOCKING=0
-export CUDA_VISIBLE_DEVICES=1,2,3,4,5,6
+export CUDA_VISIBLE_DEVICES=3,4,5,6,7
 
 nohup torchrun --nproc_per_node=auto \
-    --master_port=34651 \
+    --master_port=${random_port} \
     train.py \
-    --cfg-path lavis/projects/malmm/cls_camera_motion.yaml \
+    --cfg-path lavis/projects/malmm/cls_scoring_in_camera_motion_style.yaml \
     --options \
     model.vit_precision fp32 \
     model.num_frames 20 \
-    run.init_lr 1e-5 \
+    run.init_lr 1e-7 \
     run.batch_size_train 12 \
     run.batch_size_eval 24 \
     run.num_workers 2 \
@@ -32,7 +35,7 @@ nohup torchrun --nproc_per_node=auto \
     run.seed 42 \
     run.evaluate False \
     run.report_metric True \
-    run.prefix $timestamp \
+    run.prefix ${run_id} \
     > $logfile 2>&1 &
     # run.resume_ckpt_path \
 

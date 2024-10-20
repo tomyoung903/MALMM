@@ -1,16 +1,16 @@
 #!/bin/bash
 # always change the log file name
 
-logfile=./logs/camera_motion/test_2024-10-19_11h00m43s.log
+logfile=./logs/camera_motion/test_2024-10-20_15h40m07s.log
 # rename the old output dir if it's a run with the same parameters unless to resume the training
-timestamp='2024-10-19_11h00m43s'
+timestamp='2024-10-20_15h40m07s'
 export CUDA_LAUNCH_BLOCKING=0
 export CUDA_VISIBLE_DEVICES=0,1,2
 
 nohup torchrun --nproc_per_node=auto \
     --master_port=34651 \
     train.py \
-    --cfg-path lavis/projects/malmm/cls_camera_motion_test.yaml \
+    --cfg-path lavis/projects/malmm/camera_motion_test.yaml \
     --options \
     model.num_frames 20 \
     run.batch_size_eval 24 \
